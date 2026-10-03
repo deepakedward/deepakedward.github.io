@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Deepak Titus Edward | Staff Software Engineer, GenAI &amp; Agentic Systems">
+<meta property="og:description" content="Production RAG, multi-agent decision systems and streaming data pipelines at 100M+ device scale.">
+<meta name="twitter:card" content="summary">
+<title>Deepak Titus Edward</title>
+<meta name="description" content="Deepak Titus Edward: Staff Software Engineer building production GenAI, RAG and agentic systems on large-scale MarTech and customer data platforms.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one engineering "data sheet" column; projects read like system specs with flow diagrams and measured results. */
+:root {
+  --bg: #0f1418; --panel: #151c22; --line: #2a3640; --fg: #dfe6ea; --muted: #8b9ba7;
+  --accent: #f2a93b; --flow: #63b4c8; --accent-ink: #1a1206; --track: #222c34;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #eef2f3; --panel: #ffffff; --line: #cad4d9; --fg: #14202a; --muted: #52636f;
+  --accent: #b36a00; --flow: #1d758c; --accent-ink: #ffffff; --track: #e1e8eb; color-scheme: light; } }
+:root[data-theme="light"] {
+  --bg: #eef2f3; --panel: #ffffff; --line: #cad4d9; --fg: #14202a; --muted: #52636f;
+  --accent: #b36a00; --flow: #1d758c; --accent-ink: #ffffff; --track: #e1e8eb; color-scheme: light; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--f-body);
+  background-image: linear-gradient(color-mix(in srgb, var(--line) 35%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--line) 35%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px; background-attachment: fixed; background-position: -1px -1px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 20px; }
+a { color: var(--flow); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 12px/1.4 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; line-height: 1.05; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(30px, 4.5vw, 42px); }
+h3 { font-size: 28px; }
+p { margin: 0; max-width: 68ch; }
+.muted { color: var(--muted); }
+
+/* nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+.brand { font: 700 22px/1 var(--f-display); letter-spacing: .02em; color: var(--fg); text-decoration: none; }
+.brand span { color: var(--accent); }
+.nav ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+.nav ul a { font: 500 13px var(--f-mono); color: var(--muted); text-decoration: none; text-transform: uppercase; letter-spacing: .08em; }
+.nav ul a:hover { color: var(--fg); }
+
+/* hero */
+.hero { padding-block: 64px 40px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 48px; align-items: end; }
+.hero h1 { font-size: clamp(42px, 7vw, 78px); font-weight: 700; margin-block: 18px 22px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .lede { font-size: 18px; color: var(--muted); }
+.cta { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.btn { font: 500 14px var(--f-mono); letter-spacing: .04em; padding: 11px 18px; border: 1px solid var(--line); color: var(--fg); text-decoration: none; background: transparent; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn:hover { border-color: var(--accent); }
+
+.spec { border: 1px solid var(--line); background: var(--panel); font-size: 14px; }
+.spec header { padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.spec dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); }
+.spec dt, .spec dd { margin: 0; padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.spec dt { font: 500 11px/1.9 var(--f-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.spec dl > :nth-last-child(-n+2) { border-bottom: 0; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--flow); margin-right: 6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--flow) 25%, transparent); }
+
+/* readouts */
+.readouts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); background: var(--panel); margin-bottom: 56px; }
+.readout { padding: 18px 20px; display: grid; gap: 4px; align-content: start; }
+.readout + .readout { border-left: 1px solid var(--line); }
+.readout b { font: 600 34px/1 var(--f-display); font-variant-numeric: tabular-nums; color: var(--fg); }
+.readout b small { font-size: 20px; color: var(--muted); }
+.readout span { font-size: 13px; color: var(--muted); }
+
+/* sections */
+section { padding-block: 64px; border-top: 1px solid var(--line); }
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+
+/* project data sheet */
+.project { display: grid; gap: 26px; padding-block: 8px 48px; }
+.project + .project { border-top: 1px dashed var(--line); padding-top: 48px; }
+.p-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+.tag { font: 500 12px var(--f-mono); padding: 3px 8px; border: 1px solid var(--accent); color: var(--accent); letter-spacing: .06em; }
+.status { font: 500 12px var(--f-mono); color: var(--muted); }
+.p-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 40px; }
+.field h4 { margin: 0 0 8px; font: 500 12px var(--f-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.field h4.gap { margin-top: 22px; }
+.field ul { margin: 0; padding-left: 18px; }
+.field li + li { margin-top: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { font: 400 13px var(--f-mono); padding: 4px 10px; border: 1px solid var(--line); background: var(--panel); }
+.diagram { margin: 0; border: 1px solid var(--line); background: var(--panel); overflow-x: auto; }
+.diagram figcaption { padding: 10px 14px; border-top: 1px solid var(--line); font: 400 12px var(--f-mono); color: var(--muted); }
+.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.svg-box { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; }
+.svg-box.hot { stroke: var(--accent); stroke-width: 2; }
+.svg-t { fill: var(--fg); font: 600 15px var(--f-body); }
+.svg-s { fill: var(--muted); font: 400 11px var(--f-mono); }
+.svg-tag { fill: var(--accent); font: 500 11px var(--f-mono); }
+.svg-pipe { stroke: var(--flow); stroke-width: 2.2; fill: none; }
+.svg-pipe.anim { stroke-dasharray: 6 8; animation: flow 1.6s linear infinite; }
+.svg-arrow { fill: var(--flow); }
+@keyframes flow { to { stroke-dashoffset: -28; } }
+
+/* safety layers */
+.layers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); background: var(--panel); }
+.layer { padding: 16px 18px; display: grid; gap: 6px; align-content: start; }
+.layer + .layer { border-left: 1px solid var(--line); }
+.layer b { font: 600 20px/1.1 var(--f-display); }
+.layer p { font-size: 14px; color: var(--muted); }
+
+/* eval bars */
+.bars { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) 44px; gap: 12px; align-items: center; font-size: 14px; }
+.bar .track { position: relative; height: 10px; background: var(--track); }
+.bar .fill { position: absolute; inset: 0 auto 0 0; background: var(--flow); }
+.bar .fill.key { background: var(--accent); }
+.bar .before { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--fg); }
+.bar .val { font: 500 13px var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.bars-note { font: 400 12px var(--f-mono); color: var(--muted); margin-top: 6px; }
+.tiers { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tiers td { padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tiers td:first-child { font: 500 13px var(--f-mono); color: var(--accent); width: 90px; font-variant-numeric: tabular-nums; }
+
+/* more work */
+.more { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 8px; }
+.card { border: 1px solid var(--line); background: var(--panel); padding: 18px; display: grid; gap: 8px; align-content: start; }
+.card b { font: 600 21px/1.1 var(--f-display); }
+.card p { font-size: 14px; color: var(--muted); }
+.card .eyebrow { font-size: 11px; }
+
+/* experience */
+.timeline { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.timeline li { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.timeline .when { font: 500 13px/1.6 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.timeline h3 { font-size: 24px; }
+.timeline .role { font: 500 13px var(--f-mono); color: var(--accent); margin: 4px 0 8px; display: block; }
+.timeline p { color: var(--muted); font-size: 15px; }
+.arc { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 14px; border: 1px solid var(--line); }
+.arc div { padding: 10px 12px; font-size: 13px; color: var(--muted); }
+.arc div + div { border-left: 1px solid var(--line); }
+.arc b { display: block; font: 500 12px var(--f-mono); color: var(--fg); margin-bottom: 2px; }
+
+/* skills + leadership */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
+.skills { display: grid; gap: 18px; }
+.rubric { display: grid; gap: 8px; margin-top: 16px; }
+.rubric .bar { grid-template-columns: 170px minmax(0, 1fr) 44px; }
+.prose { display: grid; gap: 14px; }
+
+.creds { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.creds li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.creds small { font: 400 12px var(--f-mono); color: var(--muted); }
+.creds .state { font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--flow); align-self: center; }
+
+/* contact */
+.contact { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; }
+.contact h2 { font-size: clamp(36px, 6vw, 58px); max-width: 16ch; }
+.email { display: flex; border: 1px solid var(--line); background: var(--panel); max-width: 100%; }
+.email code { font: 500 15px var(--f-mono); padding: 12px 14px; user-select: all; overflow-wrap: anywhere; min-width: 0; }
+.email button { border: 0; border-left: 1px solid var(--line); }
+.links { display: flex; gap: 10px; flex-wrap: wrap; }
+footer { padding-block: 28px; border-top: 1px solid var(--line); font: 400 12px var(--f-mono); color: var(--muted); }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .hero, .p-grid, .two { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-block: 44px 32px; gap: 32px; }
+  .readouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .readout:nth-child(3) { border-left: 0; }
+  .readout:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .layers, .more { grid-template-columns: minmax(0, 1fr); }
+  .layer + .layer { border-left: 0; border-top: 1px solid var(--line); }
+  .timeline li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .arc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .arc div:nth-child(3) { border-left: 0; }
+  .arc div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .bar, .rubric .bar { grid-template-columns: 120px minmax(0, 1fr) 40px; }
+}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="brand" href="#top">Deepak Edward<span>.</span></a>
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Staff Software Engineer · GenAI, RAG &amp; Agentic Systems</div>
+      <h1>18 years of distributed systems. Now I ship <em>AI agents to production.</em></h1>
+      <p class="lede">I build generative AI on top of customer data platforms that serve tens of millions of users: RAG assistants with real evaluation, multi-agent decision systems with hard safety limits, and the streaming pipelines that feed them.</p>
+      <div class="cta">
+        <a class="btn primary" href="#work">See the work</a>
+        <a class="btn" href="Deepak_Edward_Resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <aside class="spec" aria-label="Profile summary">
+      <header><span class="eyebrow">Spec sheet</span><span class="eyebrow"><span class="dot"></span>Open to AI roles</span></header>
+      <dl>
+        <dt>Role</dt><dd>Staff Software Engineer, McAfee</dd>
+        <dt>Experience</dt><dd>18+ years</dd>
+        <dt>Focus</dt><dd>GenAI · RAG · agentic systems · MarTech &amp; CDP</dd>
+        <dt>Scale</dt><dd>100M+ devices</dd>
+        <dt>Stack</dt><dd>AWS Bedrock · Databricks · LangGraph · Python</dd>
+        <dt>Based in</dt><dd>San Francisco Bay Area</dd>
+      </dl>
+    </aside>
+  </div>
+
+  <div class="wrap">
+    <div class="readouts" aria-label="Key results">
+      <div class="readout"><b>0.17<small> → </small>0.83</b><span>RAG answer correctness after 5 evaluation rounds</span></div>
+      <div class="readout"><b>15M</b><span>web events a day through a streaming pipeline I designed</span></div>
+      <div class="readout"><b>2–5B</b><span>tag hits a year moved to a first-party domain</span></div>
+      <div class="readout"><b>60M+</b><span>profiles in the largest activation audiences I built</span></div>
+    </div>
+  </div>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Selected work</h2>
+        <span class="eyebrow">2025 – 2026</span>
+      </div>
+
+      <!-- Project 1 -->
+      <article class="project" id="nba">
+        <div class="p-head">
+          <span class="tag">AGENTIC · MARTECH</span>
+          <h3>Next-Best-Action Orchestrator</h3>
+          <span class="status">5 agents · ~6,000 lines of Python</span>
+        </div>
+        <p>Cart-recovery and renewal marketing usually runs on one static reminder rule. I replaced it with a team of five Claude agents that decide, per shopper cohort, when to reach out, what to offer, and on which channel. Every decision passes through three independent safety layers before anything is sent.</p>
+
+        <figure class="diagram">
+          <svg viewBox="0 0 960 262" role="img" aria-label="Shopper events are grouped into cohorts. Timing, Offer and Channel agents run in parallel, an Orchestrator combines them, a Critic approves or rejects, a deterministic guardrail enforces hard limits, and approved actions go to Braze.">
+            <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="svg-arrow" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+            <path class="svg-pipe anim" d="M150,130 H178" marker-end="url(#ar)"/>
+            <path class="svg-pipe" d="M302,130 H318 V55 H336" marker-end="url(#ar)"/>
+            <path class="svg-pipe" d="M302,130 H336" marker-end="url(#ar)"/>
+            <path class="svg-pipe" d="M318,130 V205 H336" marker-end="url(#ar)"/>
+            <path class="svg-pipe" d="M480,55 H498 V130 H516" marker-end="url(#ar)"/>
+            <path class="svg-pipe" d="M480,130 H516"/>
+            <path class="svg-pipe" d="M480,205 H498 V130"/>
+            <path class="svg-pipe" d="M574,160 V186" marker-end="url(#ar)"/>
+            <path class="svg-pipe" d="M606,190 V164" marker-end="url(#ar)"/>
+            <path class="svg-pipe anim" d="M660,130 H688" marker-end="url(#ar)"/>
+            <path class="svg-pipe anim" d="M830,130 H848" marker-end="url(#ar)"/>
+
+            <rect class="svg-box" x="20" y="95" width="130" height="70"/>
+            <text class="svg-tag" x="32" y="115">INGEST</text>
+            <text class="svg-t" x="32" y="137">Shopper events</text>
+            <text class="svg-s" x="32" y="155">Unity Catalog</text>
+
+            <rect class="svg-box" x="180" y="95" width="122" height="70"/>
+            <text class="svg-tag" x="192" y="115">PERCEIVE</text>
+            <text class="svg-t" x="192" y="137">Cohorts</text>
+            <text class="svg-s" x="192" y="155">sessionized</text>
+
+            <rect class="svg-box" x="338" y="30" width="142" height="50"/>
+            <text class="svg-t" x="350" y="52">Timing</text>
+            <text class="svg-s" x="350" y="70">now · +1h · +24h</text>
+            <rect class="svg-box" x="338" y="105" width="142" height="50"/>
+            <text class="svg-t" x="350" y="127">Offer</text>
+            <text class="svg-s" x="350" y="145">discount vs margin</text>
+            <rect class="svg-box" x="338" y="180" width="142" height="50"/>
+            <text class="svg-t" x="350" y="202">Channel &amp; copy</text>
+            <text class="svg-s" x="350" y="220">email · SMS · onsite</text>
+
+            <rect class="svg-box" x="518" y="100" width="142" height="60"/>
+            <text class="svg-tag" x="530" y="119">SYNTHESIZE</text>
+            <text class="svg-t" x="530" y="141">Orchestrator</text>
+            <rect class="svg-box" x="518" y="190" width="142" height="50"/>
+            <text class="svg-t" x="530" y="212">Critic</text>
+            <text class="svg-s" x="530" y="230">approve / reject</text>
+            <text class="svg-s" x="616" y="181">≤2 rounds</text>
+
+            <rect class="svg-box hot" x="690" y="85" width="140" height="90"/>
+            <text class="svg-tag" x="702" y="105">GUARDRAIL</text>
+            <text class="svg-t" x="702" y="127">Hard limits</text>
+            <text class="svg-s" x="702" y="146">≤20% discount</text>
+            <text class="svg-s" x="702" y="162">consent · quiet hours</text>
+            <text class="svg-s" x="690" y="205">human review if</text>
+            <text class="svg-s" x="690" y="221">confidence &lt; 0.6</text>
+            <text class="svg-s" x="690" y="237">or cart ≥ $150</text>
+
+            <rect class="svg-box" x="850" y="95" width="90" height="70"/>
+            <text class="svg-tag" x="862" y="115">ACT</text>
+            <text class="svg-t" x="862" y="137">Braze</text>
+            <text class="svg-s" x="862" y="155">send</text>
+          </svg>
+          <figcaption>Specialists run in parallel, the Orchestrator merges them into one typed decision, and the Critic can send it back twice before it escalates to a human.</figcaption>
+        </figure>
+
+        <div class="field">
+          <h4>Three safety layers, each a different mechanism</h4>
+          <div class="layers">
+            <div class="layer"><span class="eyebrow">1 · Reasoning</span><b>LLM Critic</b><p>Approves or rejects each decision with a concrete suggested fix. After two failed rounds the action drops to "wait" or "escalate" with confidence capped at 0.4.</p></div>
+            <div class="layer"><span class="eyebrow">2 · Code</span><b>Deterministic guardrail</b><p>Plain Python enforces a 20% discount ceiling, SMS consent, PII kept onsite, and quiet hours from 21:00 to 08:00. Every change is logged.</p></div>
+            <div class="layer"><span class="eyebrow">3 · People</span><b>Human-in-the-loop</b><p>A reviewer signs off whenever confidence is below 0.6 or the cart is worth $150 or more, through a daily review console.</p></div>
+          </div>
+        </div>
+
+        <div class="p-grid">
+          <div class="field">
+            <h4>Engineering</h4>
+            <ul>
+              <li>Two interchangeable engines with one contract: plain Python, and a LangGraph StateGraph with durable checkpointing, crash-resume and a native human-review interrupt.</li>
+              <li>Idempotent decisions keyed on visitor and run date, plus a cross-day 24-hour frequency cap.</li>
+              <li>Built-in scoreboard comparing agent decisions against the static rule on recovered carts, revenue, discount cost and net.</li>
+            </ul>
+          </div>
+          <div class="field">
+            <h4>Deployment</h4>
+            <ul>
+              <li>Databricks-native: a Workflow reads gold events from Unity Catalog, agents run on Mosaic AI Model Serving, state lives in Delta tables, and a Streamlit Databricks App hosts the review console.</li>
+              <li>Shipped with Databricks Asset Bundles. Braze is the only external hop, running in shadow mode first.</li>
+              <li>A full AWS design also exists: ECS Fargate, SQS with DLQ, DynamoDB checkpoints, and Bedrock Batch for non-urgent decisions at about half the cost.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="chips"><span>Claude</span><span>LangGraph</span><span>Databricks</span><span>Unity Catalog</span><span>Mosaic AI</span><span>Braze</span><span>Streamlit</span><span>Structured outputs</span></div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="project" id="rag">
+        <div class="p-head">
+          <span class="tag">GENAI · RAG</span>
+          <h3>Production RAG Shopping Assistant</h3>
+          <span class="status">AWS Bedrock · in production</span>
+        </div>
+        <p>A customer-facing assistant for a consumer security storefront that answers product, plan and feature questions and helps recover abandoned carts. I built the whole stack, then the evaluation framework that took it from unreliable to production-ready.</p>
+
+        <div class="p-grid">
+          <div class="field">
+            <h4>Evaluation results (LLM-as-a-judge, ~500-prompt sets)</h4>
+            <div class="bars" role="list">
+              <div class="bar" role="listitem"><span>Correctness</span><span class="track"><span class="fill key" style="width:83%"></span><span class="before" style="left:17%" title="Before: 0.17"></span></span><span class="val">0.83</span></div>
+              <div class="bar" role="listitem"><span>Logical coherence</span><span class="track"><span class="fill" style="width:99%"></span></span><span class="val">0.99</span></div>
+              <div class="bar" role="listitem"><span>Context recall</span><span class="track"><span class="fill" style="width:99%"></span></span><span class="val">0.99</span></div>
+              <div class="bar" role="listitem"><span>Citation coverage</span><span class="track"><span class="fill" style="width:88%"></span></span><span class="val">0.88</span></div>
+              <div class="bar" role="listitem"><span>Helpfulness</span><span class="track"><span class="fill" style="width:81%"></span></span><span class="val">0.81</span></div>
+              <div class="bar" role="listitem"><span>Citation precision</span><span class="track"><span class="fill" style="width:77%"></span></span><span class="val">0.77</span></div>
+              <div class="bar" role="listitem"><span>Harmfulness</span><span class="track"><span class="fill" style="width:0%"></span></span><span class="val">0.00</span></div>
+            </div>
+            <p class="bars-note">Scale 0 to 1. White tick marks correctness before the work started (0.17). Harmfulness: lower is better.</p>
+          </div>
+          <div class="field">
+            <h4>Verified semantic cache</h4>
+            <table class="tiers">
+              <tr><td>&gt; 80%</td><td>Similar to a verified answer: return it directly</td></tr>
+              <tr><td>60 – 80%</td><td>Use the verified answer as a few-shot example</td></tr>
+              <tr><td>&lt; 60%</td><td>Fall back to the full agent</td></tr>
+            </table>
+            <h4 class="gap">Service levels</h4>
+            <p class="muted">99.9% availability · P95 under 2 seconds · error rate under 0.1%, backed by an 815-line runbook, CloudWatch alarms and per-model token-cost dashboards.</p>
+          </div>
+        </div>
+
+        <div class="p-grid">
+          <div class="field">
+            <h4>What I built</h4>
+            <ul>
+              <li>Bedrock Agent and Knowledge Base over 68 documents in five locales, with Guardrails for PII and least-privilege IAM.</li>
+              <li>Two vector stores, OpenSearch Serverless and Aurora pgvector, to compare chunking strategies side by side.</li>
+              <li>Redis conversation memory, intent classification, and reranking from top 10 down to top 3.</li>
+            </ul>
+          </div>
+          <div class="field">
+            <h4>How the evaluation found real fixes</h4>
+            <ul>
+              <li>Python tooling pulled 262 low-faithfulness answers out of the judge output and re-tested them across three chunking strategies.</li>
+              <li>Root-caused a locale hallucination to vague source documents rather than the prompt, corrected 10 files, and shipped the fix in two merged PRs.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="chips"><span>AWS Bedrock</span><span>Amazon Nova</span><span>Claude</span><span>Titan Embeddings v2</span><span>Cohere Rerank</span><span>OpenSearch</span><span>pgvector</span><span>Redis</span></div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="project" id="pipeline">
+        <div class="p-head">
+          <span class="tag">DATA · STREAMING</span>
+          <h3>First-Party Web Events Pipeline</h3>
+          <span class="status">15M events/day · 500K/min peak</span>
+        </div>
+        <p>An end-to-end, first-party pipeline that collects web events in the browser and streams them into a Databricks medallion architecture for the customer data platform, with personal data kept separate from the moment it is collected.</p>
+
+        <figure class="diagram">
+          <svg viewBox="0 0 960 170" role="img" aria-label="Tealium tags call a custom JavaScript SDK, which posts to an API gateway, then Kafka topics split into PII and non-PII, then Databricks bronze, silver and gold tables, then Hightouch.">
+            <path class="svg-pipe anim" d="M155,80 H178" marker-end="url(#ar)"/>
+            <path class="svg-pipe anim" d="M315,80 H338" marker-end="url(#ar)"/>
+            <path class="svg-pipe anim" d="M475,80 H498" marker-end="url(#ar)"/>
+            <path class="svg-pipe anim" d="M635,80 H658" marker-end="url(#ar)"/>
+            <path class="svg-pipe anim" d="M795,80 H818" marker-end="url(#ar)"/>
+            <rect class="svg-box" x="20" y="35" width="135" height="90"/>
+            <text class="svg-tag" x="32" y="57">TAGS</text><text class="svg-t" x="32" y="81">Tealium</text><text class="svg-s" x="32" y="103">utag</text>
+            <rect class="svg-box hot" x="180" y="35" width="135" height="90"/>
+            <text class="svg-tag" x="192" y="57">COLLECT</text><text class="svg-t" x="192" y="81">JS SDK</text><text class="svg-s" x="192" y="103">~13 KB · ES5</text>
+            <rect class="svg-box" x="340" y="35" width="135" height="90"/>
+            <text class="svg-tag" x="352" y="57">INGRESS</text><text class="svg-t" x="352" y="81">Kong gateway</text><text class="svg-s" x="352" y="103">on EKS</text>
+            <rect class="svg-box" x="500" y="35" width="135" height="90"/>
+            <text class="svg-tag" x="512" y="57">STREAM</text><text class="svg-t" x="512" y="81">Kafka</text><text class="svg-s" x="512" y="103">PII · non-PII</text>
+            <rect class="svg-box" x="660" y="35" width="135" height="90"/>
+            <text class="svg-tag" x="672" y="57">MEDALLION</text><text class="svg-t" x="672" y="81">Databricks</text><text class="svg-s" x="672" y="103">bronze→silver→gold</text>
+            <rect class="svg-box" x="820" y="35" width="120" height="90"/>
+            <text class="svg-tag" x="832" y="57">ACTIVATE</text><text class="svg-t" x="832" y="81">Hightouch</text><text class="svg-s" x="832" y="103">CDP</text>
+          </svg>
+          <figcaption>IP addresses are masked at collection, and PII and non-PII travel on separate Avro topics end to end.</figcaption>
+        </figure>
+
+        <div class="p-grid">
+          <div class="field">
+            <h4>Browser SDK</h4>
+            <ul>
+              <li>Dependency-free JavaScript: batching, retry with exponential backoff that honors 429 Retry-After, a three-tier unload fallback, dedup and a schema allowlist.</li>
+              <li>Tested with about 717 lines of Jest unit tests and 168 lines of Playwright end-to-end tests.</li>
+            </ul>
+          </div>
+          <div class="field">
+            <h4>Streaming layer</h4>
+            <ul>
+              <li>Spark Structured Streaming on Change Data Feed with immutable facts: insert-only MERGE gives silent dedup on message ID.</li>
+              <li>Bot filtering, two backward-compatible Avro schemas, and a production runbook with InfoSec and Legal sign-off and a 30-minute rollback.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="chips"><span>JavaScript</span><span>Kafka</span><span>Avro</span><span>Spark Structured Streaming</span><span>Delta Lake</span><span>Databricks</span><span>Jest</span><span>Playwright</span></div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="project" id="migration">
+        <div class="p-head">
+          <span class="tag">PLATFORM · MIGRATION</span>
+          <h3>First-Party Domain Migration</h3>
+          <span class="status">2–5B hits/year · 136 governed scripts</span>
+        </div>
+        <div class="p-grid">
+          <div class="field">
+            <p>Moved tag collection from a third-party domain to a first-party domain behind an Akamai reverse proxy, to stop signal loss from Safari ITP and ad blockers and keep attribution cookies alive. Released to the UK and Australian sites, with the US site held as the control.</p>
+          </div>
+          <div class="field">
+            <ul>
+              <li>Coordinated six teams: MarTech, InfoSec, PKI, Network, Akamai and Tealium.</li>
+              <li>Wrote a validation-gated, five-phase runbook and a beacon-level analytics measurement plan with a control and test design.</li>
+              <li>Debugged a production 404 at cutover. Post-release metrics on both sites came in slightly better.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <div class="sec-head" style="margin-top:24px;margin-bottom:16px"><h3>More work</h3></div>
+      <div class="more">
+        <div class="card"><span class="eyebrow">CDP · 2021–2025</span><b>Customer data at scale</b><p>Modeled Adobe Experience Platform data across 100M+ devices and tens of millions of users and subscriptions. Led a V1 to V2 device schema migration and found an identity-stitching defect that merged distinct users into one profile.</p></div>
+        <div class="card"><span class="eyebrow">AdTech</span><b>8+ activation destinations</b><p>LiveRamp, Meta, Yahoo, Rokt, PebblePost, Optizmo, Dynata and Google Ads, with hashed SFTP and API delivery. Shipped anonymous-user activation through LiveRamp.</p></div>
+        <div class="card"><span class="eyebrow">Machine learning</span><b>Dynamic pricing classifier</b><p>scikit-learn and XGBoost across six model families, with SMOTE for class imbalance and randomized search, scored on F1 and ROC-AUC.</p></div>
+        <div class="card"><span class="eyebrow">Reliability</span><b>Monitoring and automation</b><p>30+ CloudWatch dashboards and anomaly alarms. Automated profile cleanup that removed 2.5 hours of manual work a day, and ran zero-downtime Lambda runtime upgrades.</p></div>
+        <div class="card"><span class="eyebrow">Privacy</span><b>GDPR and data governance</b><p>Fixed and rebuilt GDPR processing, handled data-subject requests, and wrote the legal and InfoSec designs for compliant third-party data sharing.</p></div>
+        <div class="card"><span class="eyebrow">Personal lab</span><b>Trading Lab</b><p>Streamlit apps on Alpaca's paper trading API: SMA and RSI signals, simulated orders, and a backtester against buy-and-hold with lookahead-bias protection.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Experience</h2>
+        <span class="eyebrow">2007 – present</span>
+      </div>
+      <ol class="timeline">
+        <li>
+          <span class="when">Jul 2021 – present<br>Santa Clara, CA</span>
+          <div>
+            <h3>McAfee</h3><span class="role">Staff Software Engineer</span>
+            <p>Lead MarTech data engineering and generative AI for the consumer business at 100M+ device scale on AWS, Adobe Experience Platform and Databricks.</p>
+            <div class="arc" aria-label="Progression at McAfee">
+              <div><b>2023</b>CDP engineering, identity, privacy</div>
+              <div><b>2024</b>Data modeling at scale, ML pricing</div>
+              <div><b>2025</b>Owner of GenAI and RAG</div>
+              <div><b>2026</b>Agentic systems, platform lead</div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="when">Jul 2020 – Jul 2021</span>
+          <div><h3>HCL Technologies</h3><span class="role">Senior Technical Architect</span><p>Spring Boot and Spring Batch microservices on Kubernetes, and scalable data-ingestion tooling for a platform team.</p></div>
+        </li>
+        <li>
+          <span class="when">Aug 2018 – Jun 2020</span>
+          <div><h3>realtor.com</h3><span class="role">Staff Software Engineer, Lead Monetization</span><p>Large-scale distributed REST services on AWS. Migrated Lambda services to an ECS Spring Batch application, built Splunk and New Relic observability, and mentored engineers.</p></div>
+        </li>
+        <li>
+          <span class="when">Apr 2015 – Jul 2018</span>
+          <div><h3>Infosys</h3><span class="role">Technology Lead</span><p>Lead Java backend engineer for Apple's product-manufacturing team: multithreaded REST APIs built test-first, and a team of front-end and back-end developers.</p></div>
+        </li>
+        <li>
+          <span class="when">Jul 2007 – Apr 2015</span>
+          <div><h3>ITC Infotech</h3><span class="role">Lead / Senior Software Engineer</span><p>REST APIs on Google Cloud for Motorola Mobility, the Big Data Center of Excellence, a UK online-banking portal, and the Starwood Hotels reservation system.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap two">
+      <div>
+        <div class="sec-head"><h2>Skills</h2></div>
+        <div class="skills">
+          <div class="field"><h4>Generative AI &amp; agents</h4><div class="chips"><span>AWS Bedrock</span><span>Claude</span><span>Amazon Nova</span><span>LangGraph</span><span>Mosaic AI</span><span>Databricks Genie</span><span>RAG</span><span>Semantic caching</span><span>LLM-as-a-judge</span><span>Human-in-the-loop</span></div></div>
+          <div class="field"><h4>Data &amp; cloud</h4><div class="chips"><span>Databricks</span><span>Spark Streaming</span><span>Delta Lake</span><span>Kafka</span><span>Adobe RT-CDP</span><span>Tealium</span><span>Hightouch</span><span>Braze</span><span>AWS Lambda</span><span>Step Functions</span><span>DynamoDB</span><span>ECS Fargate</span></div></div>
+          <div class="field"><h4>Languages &amp; tooling</h4><div class="chips"><span>Python</span><span>SQL</span><span>JavaScript</span><span>Java</span><span>Terraform</span><span>GitHub Actions</span><span>Jest</span><span>Playwright</span></div></div>
+          <div class="field"><h4>Machine learning</h4><div class="chips"><span>scikit-learn</span><span>XGBoost</span><span>pandas</span><span>Model evaluation</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head"><h2>Hiring &amp; leadership</h2></div>
+        <div class="prose">
+          <p>I wrote my company's Senior MarTech AI Engineer hiring framework and built the interview program behind it: a five-round loop, Python-generated question banks, and a weighted scorecard. I've used it to evaluate about ten candidates across two teams.</p>
+          <div class="field">
+            <h4>Scorecard weights</h4>
+            <div class="rubric">
+              <div class="bar"><span>ML &amp; AI depth</span><span class="track"><span class="fill key" style="width:100%"></span></span><span class="val">25%</span></div>
+              <div class="bar"><span>System design</span><span class="track"><span class="fill" style="width:80%"></span></span><span class="val">20%</span></div>
+              <div class="bar"><span>Evaluation</span><span class="track"><span class="fill" style="width:60%"></span></span><span class="val">15%</span></div>
+              <div class="bar"><span>Coding</span><span class="track"><span class="fill" style="width:60%"></span></span><span class="val">15%</span></div>
+              <div class="bar"><span>Leadership</span><span class="track"><span class="fill" style="width:60%"></span></span><span class="val">15%</span></div>
+              <div class="bar"><span>Learning velocity</span><span class="track"><span class="fill" style="width:40%"></span></span><span class="val">10%</span></div>
+            </div>
+          </div>
+          <p class="muted">Recognized for "Outstanding Performance and Excellence in Execution."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="wrap two">
+      <div>
+        <div class="sec-head"><h2>Education</h2></div>
+        <ul class="creds">
+          <li><div>Post Graduate Program in AI &amp; Machine Learning<br><small>University of Texas at Austin, McCombs · 2023–2024</small></div><span class="state">Completed</span></li>
+          <li><div>MCA, Computer Science<br><small>Dr. A.P.J. Abdul Kalam Technical University · 2004–2007</small></div><span class="state">Completed</span></li>
+          <li><div>B.Sc., Mathematics, Chemistry &amp; Physics<br><small>Kanpur University · 2001–2004</small></div><span class="state">Completed</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="sec-head"><h2>Certifications</h2></div>
+        <ul class="creds">
+          <li><div>AWS Certified AI Practitioner<br><small>Amazon Web Services · 2025</small></div><span class="state">Certified</span></li>
+          <li><div>Databricks Certified Generative AI Engineer Associate<br><small>Databricks</small></div><span class="state">Certified</span></li>
+          <li><div>Generative AI for Practitioners · Introduction to Generative AI<br><small>Certificates</small></div><span class="state">Completed</span></li>
+          <li><div>Machine Learning Foundations · AI on Cloud<br><small>Certificates</small></div><span class="state">Completed</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap contact">
+      <div>
+        <div class="eyebrow">Contact</div>
+        <h2 style="margin-top:12px">Building agents on real customer data?</h2>
+        <p class="muted" style="margin-top:12px">The fastest way to reach me is a LinkedIn message. My resume is a one-click download.</p>
+      </div>
+      <div style="display:grid;gap:12px;min-width:0">
+        <span class="eyebrow">Reach me on</span>
+        <div class="links">
+          <a class="btn primary" href="Deepak_Edward_Resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+          <a class="btn" href="https://www.linkedin.com/in/deepakedward" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://github.com/deepakedward" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href="https://deepakedward.medium.com/" target="_blank" rel="noopener">Medium</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© <span id="yr">2026</span> Deepak Titus Edward</span><span>San Francisco Bay Area</span></div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
